@@ -22,3 +22,17 @@ Then start development:
 ```sh
 npm run dev
 ```
+
+## No-npm Preview
+
+If the local machine does not have npm available, run the prototype preview:
+
+```sh
+python3 -m http.server 4173
+```
+
+Then open:
+
+```text
+http://localhost:4173/preview.html
+```
