@@ -4,102 +4,438 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>习得 · 原型预览</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@19/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@19/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      :root {
+        color: #020617;
+        background: #f5f7fb;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+      }
+
+      button,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .shell {
+        min-height: 100vh;
+        background:
+          linear-gradient(180deg, rgba(191, 219, 254, 0.7), rgba(255, 255, 255, 0.62), rgba(245, 247, 251, 0)) top / 100% 320px no-repeat,
+          #f5f7fb;
+      }
+
+      .wrap {
+        width: min(100% - 40px, 1280px);
+        margin: 0 auto;
+        padding: 20px 0 32px;
+      }
+
+      .topbar,
+      .sidebar,
+      .hero,
+      .panel,
+      .page-title,
+      .book,
+      .task,
+      .stepper,
+      .session-card {
+        background: rgba(255, 255, 255, 0.86);
+        border-radius: 32px;
+        box-shadow: 0 10px 30px rgba(148, 163, 184, 0.16);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 20px;
+        backdrop-filter: blur(18px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 0;
+        background: transparent;
+        text-align: left;
+      }
+
+      .logo {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border-radius: 18px;
+        background: #2563eb;
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.24);
+      }
+
+      .brand strong {
+        display: block;
+        font-size: 18px;
+      }
+
+      .muted {
+        color: #64748b;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 24px;
+        padding-top: 24px;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 24px;
+        height: fit-content;
+        padding: 12px;
+      }
+
+      .nav-button {
+        width: 100%;
+        border: 0;
+        border-radius: 20px;
+        background: transparent;
+        color: #475569;
+        padding: 14px 16px;
+        text-align: left;
+      }
+
+      .nav-button + .nav-button {
+        margin-top: 8px;
+      }
+
+      .nav-button.active {
+        background: #2563eb;
+        color: #fff;
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+      }
+
+      .nav-button span {
+        display: block;
+        margin-top: 4px;
+        color: #94a3b8;
+        font-size: 12px;
+      }
+
+      .nav-button.active span {
+        color: #dbeafe;
+      }
+
+      .main {
+        min-width: 0;
+      }
+
+      .stack {
+        display: grid;
+        gap: 24px;
+      }
+
+      .hero,
+      .page-title,
+      .panel,
+      .session-card {
+        padding: 28px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: #2563eb;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 800px;
+        margin-top: 12px;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        font-size: 28px;
+        line-height: 1.18;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+
+      .lead {
+        max-width: 720px;
+        margin-top: 18px;
+        color: #64748b;
+        font-size: 18px;
+        line-height: 1.75;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .primary,
+      .secondary,
+      .pill-button {
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .primary {
+        background: #2563eb;
+        color: #fff;
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+      }
+
+      .secondary,
+      .pill-button {
+        background: #f1f5f9;
+        color: #334155;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1.2fr 0.9fr;
+        gap: 24px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .row,
+      .island {
+        border-radius: 22px;
+        background: #f8fafc;
+        padding: 16px;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .badge {
+        display: inline-flex;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #2563eb;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .progress {
+        height: 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #f1f5f9;
+      }
+
+      .progress div {
+        height: 100%;
+        border-radius: inherit;
+        background: #2563eb;
+      }
+
+      .ability {
+        border: 0;
+        border-radius: 26px;
+        background: #fff;
+        padding: 22px;
+        text-align: left;
+        box-shadow: 0 10px 30px rgba(148, 163, 184, 0.16);
+      }
+
+      .ability.active {
+        background: #2563eb;
+        color: white;
+      }
+
+      .ability.active .muted {
+        color: #dbeafe;
+      }
+
+      .book {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .cover {
+        min-height: 190px;
+        border-radius: 26px;
+        background: linear-gradient(135deg, #dbeafe, #bae6fd);
+        padding: 20px;
+        display: flex;
+        align-items: end;
+        font-size: 20px;
+        font-weight: 800;
+      }
+
+      .task {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .chip {
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .stepper {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        padding: 20px;
+      }
+
+      .step {
+        border: 0;
+        border-radius: 18px;
+        background: #f8fafc;
+        color: #94a3b8;
+        padding: 12px;
+        font-weight: 700;
+      }
+
+      .step.active {
+        background: #2563eb;
+        color: white;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 240px;
+        margin-top: 22px;
+        resize: vertical;
+        border: 1px solid #e2e8f0;
+        border-radius: 26px;
+        background: #f8fafc;
+        padding: 18px;
+        outline: none;
+        line-height: 1.7;
+      }
+
+      .session-read {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 24px;
+      }
+
+      .large-copy {
+        font-size: 25px;
+        font-weight: 750;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 900px) {
+        .layout,
+        .grid-2,
+        .session-read,
+        .book {
+          grid-template-columns: 1fr;
+        }
+
+        .grid-3,
+        .grid-4,
+        .stepper {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar,
+        .task {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+    </style>
   </head>
-  <body class="bg-[#f5f7fb] text-slate-950">
-    <div id="root"></div>
+  <body>
+    <div id="app" class="shell"></div>
 
-    <script type="text/babel">
-      const { useMemo, useState } = React;
-
+    <script>
       const abilities = [
-        {
-          id: "learning",
-          name: "高效学习",
-          progress: 72,
-          problem: "把输入转化成稳定能力，而不是短暂熟悉感。",
-          books: ["上瘾式学习", "认知天性"],
-          islands: [
-            ["记忆机制", 12, 3],
-            ["主动回忆", 9, 2],
-            ["间隔复习", 8, 2],
-            ["反馈修正", 6, 2],
-            ["应用输出", 11, 4],
-            ["学习环境", 5, 1],
-          ],
-        },
-        {
-          id: "decision",
-          name: "决策判断",
-          progress: 54,
-          problem: "在复杂选择里看见成本、概率和长期影响。",
-          books: ["思考，快与慢", "穷查理宝典"],
-          islands: [
-            ["机会成本", 7, 2],
-            ["偏误识别", 10, 3],
-            ["长期后果", 6, 2],
-          ],
-        },
-        {
-          id: "writing",
-          name: "表达写作",
-          progress: 41,
-          problem: "用短句讲清观点，让别人立刻知道下一步。",
-          books: ["金字塔原理", "风格感觉"],
-          islands: [
-            ["观点排序", 6, 2],
-            ["短句表达", 5, 1],
-            ["例子设计", 4, 2],
-          ],
-        },
-        {
-          id: "longterm",
-          name: "长期主义",
-          progress: 36,
-          problem: "把今天的小动作放进更长的复利系统。",
-          books: ["纳瓦尔宝典", "原则"],
-          islands: [
-            ["复利系统", 5, 2],
-            ["反脆弱", 3, 1],
-            ["节奏管理", 4, 2],
-          ],
-        },
+        { id: "learning", name: "高效学习", progress: 72, problem: "把输入转化成稳定能力，而不是短暂熟悉感。", books: ["上瘾式学习", "认知天性"], islands: [["记忆机制", 12, 3], ["主动回忆", 9, 2], ["间隔复习", 8, 2], ["反馈修正", 6, 2], ["应用输出", 11, 4], ["学习环境", 5, 1]] },
+        { id: "decision", name: "决策判断", progress: 54, problem: "在复杂选择里看见成本、概率和长期影响。", books: ["思考，快与慢", "穷查理宝典"], islands: [["机会成本", 7, 2], ["偏误识别", 10, 3], ["长期后果", 6, 2]] },
+        { id: "writing", name: "表达写作", progress: 41, problem: "用短句讲清观点，让别人立刻知道下一步。", books: ["金字塔原理", "风格感觉"], islands: [["观点排序", 6, 2], ["短句表达", 5, 1], ["例子设计", 4, 2]] },
+        { id: "longterm", name: "长期主义", progress: 36, problem: "把今天的小动作放进更长的复利系统。", books: ["纳瓦尔宝典", "原则"], islands: [["复利系统", 5, 2], ["反脆弱", 3, 1], ["节奏管理", 4, 2]] },
       ];
 
       const books = [
-        {
-          title: "上瘾式学习",
-          author: "李明",
-          color: "from-blue-100 to-sky-200",
-          excerpt:
-            "真正有效的学习不是重复阅读，而是在遗忘发生前主动取回。每一次困难回忆，都会让知识的提取路径更稳固。",
-          contributes: ["高效学习", "记忆管理", "自我训练"],
-        },
-        {
-          title: "认知天性",
-          author: "彼得 C. 布朗",
-          color: "from-indigo-100 to-blue-200",
-          excerpt:
-            "测验不是学习后的检查，而是学习本身。低风险测验会暴露空白，也会加深长期记忆。",
-          contributes: ["高效学习", "反馈修正", "长期记忆"],
-        },
-        {
-          title: "思考，快与慢",
-          author: "丹尼尔·卡尼曼",
-          color: "from-slate-100 to-gray-200",
-          excerpt: "直觉很快，但它也会在复杂问题里给出过度自信的答案。",
-          contributes: ["决策判断", "偏误识别", "概率思维"],
-        },
-        {
-          title: "金字塔原理",
-          author: "芭芭拉·明托",
-          color: "from-cyan-100 to-blue-100",
-          excerpt: "清楚的表达先给结论，再组织理由，让听者减少整理负担。",
-          contributes: ["表达写作", "结构表达", "沟通效率"],
-        },
+        { title: "上瘾式学习", author: "李明", excerpt: "真正有效的学习不是重复阅读，而是在遗忘发生前主动取回。每一次困难回忆，都会让知识的提取路径更稳固。", contributes: ["高效学习", "记忆管理", "自我训练"] },
+        { title: "认知天性", author: "彼得 C. 布朗", excerpt: "测验不是学习后的检查，而是学习本身。低风险测验会暴露空白，也会加深长期记忆。", contributes: ["高效学习", "反馈修正", "长期记忆"] },
+        { title: "思考，快与慢", author: "丹尼尔·卡尼曼", excerpt: "直觉很快，但它也会在复杂问题里给出过度自信的答案。", contributes: ["决策判断", "偏误识别", "概率思维"] },
+        { title: "金字塔原理", author: "芭芭拉·明托", excerpt: "清楚的表达先给结论，再组织理由，让听者减少整理负担。", contributes: ["表达写作", "结构表达", "沟通效率"] },
       ];
 
       const points = [
@@ -110,11 +446,19 @@
         ["先说结论能降低理解负担", "表达写作", "金字塔原理"],
       ];
 
-      const initialTasks = [
-        ["用 100 字解释主动回忆", "发给一个正在备考的朋友。", ["主动回忆", "反馈修正"]],
-        ["用机会成本分析今天一个选择", "在工作、学习或消费中选一个真实决定。", ["机会成本"]],
-        ["用白纸法学习一篇文章", "读完后合上页面，写下你真正记住的结构。", ["白纸法", "主动回忆"]],
+      const tasks = [
+        { title: "用 100 字解释主动回忆", scene: "发给一个正在备考的朋友。", points: ["主动回忆", "反馈修正"], done: false },
+        { title: "用机会成本分析今天一个选择", scene: "在工作、学习或消费中选一个真实决定。", points: ["机会成本"], done: false },
+        { title: "用白纸法学习一篇文章", scene: "读完后合上页面，写下你真正记住的结构。", points: ["白纸法", "主动回忆"], done: false },
       ];
+
+      const state = {
+        view: "home",
+        ability: "learning",
+        book: books[0],
+        step: "read",
+        recall: "",
+      };
 
       const nav = [
         ["home", "首页", "今天练什么"],
@@ -123,7 +467,7 @@
         ["field", "应用场", "我把知识用到哪里"],
       ];
 
-      const steps = [
+      const stepNames = [
         ["read", "学习中"],
         ["recall", "白纸回忆"],
         ["feedback", "AI 反馈"],
@@ -131,251 +475,134 @@
         ["apply", "应用任务"],
       ];
 
-      function App() {
-        const [view, setView] = useState("home");
-        const [abilityId, setAbilityId] = useState("learning");
-        const [book, setBook] = useState(books[0]);
-        const [step, setStep] = useState("read");
-        const [recall, setRecall] = useState("");
-        const [done, setDone] = useState([]);
-        const ability = useMemo(
-          () => abilities.find((item) => item.id === abilityId) || abilities[0],
-          [abilityId],
-        );
+      function go(view) {
+        state.view = view;
+        render();
+      }
 
-        const start = (nextBook = books[0]) => {
-          setBook(nextBook);
-          setStep("read");
-          setRecall("");
-          setView("session");
-        };
+      function start(index = 0) {
+        state.book = books[index];
+        state.step = "read";
+        state.recall = "";
+        go("session");
+      }
 
-        return (
-          <main className="min-h-screen">
-            <div className="pointer-events-none fixed inset-x-0 top-0 h-80 bg-gradient-to-b from-blue-100/70 via-white/60 to-transparent" />
-            <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-5 sm:px-8 lg:px-10">
-              <header className="flex items-center justify-between rounded-3xl bg-white/80 px-5 py-4 shadow-sm shadow-slate-200/80 backdrop-blur">
-                <button onClick={() => setView("home")} className="flex items-center gap-3 text-left">
-                  <span className="grid size-11 place-items-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-200">习</span>
-                  <span>
-                    <span className="block text-lg font-semibold">习得</span>
-                    <span className="block text-sm text-slate-500">把书变成能力的 AI 学习教练</span>
-                  </span>
-                </button>
-                <button onClick={() => start()} className="hidden rounded-full bg-blue-600 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-blue-200 sm:block">
-                  开始一次训练
-                </button>
-              </header>
+      function setStep(step) {
+        state.step = step;
+        render();
+      }
 
-              <div className="grid flex-1 gap-6 py-6 lg:grid-cols-[260px_1fr]">
-                <aside className="rounded-3xl bg-white/75 p-3 shadow-sm shadow-slate-200/80 backdrop-blur lg:sticky lg:top-6 lg:h-fit">
-                  <nav className="grid gap-2">
-                    {nav.map(([id, label, sub]) => (
-                      <button
-                        key={id}
-                        onClick={() => setView(id)}
-                        className={`rounded-2xl px-4 py-3 text-left transition ${
-                          view === id ? "bg-blue-600 text-white shadow-lg shadow-blue-100" : "text-slate-600 hover:bg-slate-100"
-                        }`}
-                      >
-                        <span className="block text-sm font-semibold">{label}</span>
-                        <span className={`block text-xs ${view === id ? "text-blue-100" : "text-slate-400"}`}>{sub}</span>
-                      </button>
-                    ))}
-                  </nav>
-                </aside>
+      function title(eyebrow, heading, desc) {
+        return `<section class="page-title"><p class="eyebrow">${eyebrow}</p><h2>${heading}</h2><p class="lead">${desc}</p></section>`;
+      }
 
-                <section className="min-w-0">
-                  {view === "home" && <Home start={start} setView={setView} done={done} setDone={setDone} />}
-                  {view === "map" && <MapView ability={ability} abilityId={abilityId} setAbilityId={setAbilityId} />}
-                  {view === "library" && <Library start={start} />}
-                  {view === "field" && <Field done={done} setDone={setDone} />}
-                  {view === "session" && (
-                    <Session book={book} step={step} setStep={setStep} recall={recall} setRecall={setRecall} setView={setView} />
-                  )}
-                </section>
-              </div>
+      function panel(name, body, action = "") {
+        return `<section class="panel"><div class="panel-head"><h3>${name}</h3>${action}</div>${body}</section>`;
+      }
+
+      function renderShell(content) {
+        return `
+          <div class="wrap">
+            <header class="topbar">
+              <button class="brand" onclick="go('home')">
+                <span class="logo">习</span>
+                <span><strong>习得</strong><span class="muted">把书变成能力的 AI 学习教练</span></span>
+              </button>
+              <button class="primary" onclick="start()">开始一次训练</button>
+            </header>
+            <div class="layout">
+              <aside class="sidebar">
+                ${nav.map(([id, label, sub]) => `<button class="nav-button ${state.view === id ? "active" : ""}" onclick="go('${id}')">${label}<span>${sub}</span></button>`).join("")}
+              </aside>
+              <main class="main">${content}</main>
             </div>
-          </main>
-        );
+          </div>
+        `;
       }
 
-      function Title({ eyebrow, title, desc }) {
-        return (
-          <section className="rounded-[2rem] bg-white/80 p-6 shadow-sm shadow-slate-200/90 backdrop-blur sm:p-8">
-            <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
-            <h1 className="mt-3 max-w-4xl text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-500">{desc}</p>
-          </section>
-        );
-      }
-
-      function Panel({ title, action, onAction, children }) {
-        return (
-          <section className="rounded-[2rem] bg-white p-5 shadow-sm shadow-slate-200/90 sm:p-6">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">{title}</h2>
-              {action && <button onClick={onAction} className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium">{action}</button>}
-            </div>
-            {children}
-          </section>
-        );
-      }
-
-      function Home({ start, setView, done, setDone }) {
-        const today = initialTasks.find((_, index) => !done.includes(index)) || initialTasks[0];
-        const todayIndex = initialTasks.indexOf(today);
-        return (
-          <div className="space-y-6">
-            <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm shadow-slate-200/90 sm:px-8">
-              <p className="text-sm font-medium text-blue-600">今天练什么</p>
-              <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">今天，把 3 个知识变成你的能力。</h1>
-              <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-500">系统已经排好训练顺序。你只需要读一点、合上书、说出你记住了什么。</p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <button onClick={() => start()} className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200">开始 12 分钟训练</button>
-                <button onClick={() => setView("map")} className="rounded-full bg-slate-100 px-6 py-3 text-sm font-semibold text-slate-700">查看能力地图</button>
-              </div>
+      function home() {
+        const today = tasks.find((task) => !task.done) || tasks[0];
+        const todayIndex = tasks.indexOf(today);
+        return `
+          <div class="stack">
+            <section class="hero">
+              <p class="eyebrow">今天练什么</p>
+              <h1>今天，把 3 个知识变成你的能力。</h1>
+              <p class="lead">系统已经排好训练顺序。你只需要读一点、合上书、说出你记住了什么。</p>
+              <div class="actions"><button class="primary" onclick="start()">开始 12 分钟训练</button><button class="secondary" onclick="go('map')">查看能力地图</button></div>
             </section>
-
-            <div className="grid gap-6 xl:grid-cols-[1.2fr_0.9fr]">
-              <Panel title="今日提取" action="进入训练" onAction={() => start()}>
-                <div className="grid gap-3">
-                  {points.map(([title, ability, source]) => (
-                    <div key={title} className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
-                      <div>
-                        <p className="text-sm font-semibold">{title}</p>
-                        <p className="mt-1 text-xs text-slate-500">{ability} · {source}</p>
-                      </div>
-                      <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-blue-600 shadow-sm">今天</span>
-                    </div>
-                  ))}
-                </div>
-              </Panel>
-              <Panel title="能力进度" action="看全部" onAction={() => setView("map")}>
-                <div className="space-y-5">
-                  {abilities.slice(0, 3).map((item) => (
-                    <div key={item.id}>
-                      <div className="mb-2 flex items-center justify-between">
-                        <p className="text-sm font-semibold">{item.name}</p>
-                        <span className="text-sm font-semibold text-blue-600">{item.progress}%</span>
-                      </div>
-                      <div className="h-2 rounded-full bg-slate-100"><div className="h-2 rounded-full bg-blue-600" style={{ width: `${item.progress}%` }} /></div>
-                    </div>
-                  ))}
-                </div>
-              </Panel>
+            <div class="grid-2">
+              ${panel("今日提取", `<div class="list">${points.map((p) => `<div class="row"><div><strong>${p[0]}</strong><p class="muted">${p[1]} · ${p[2]}</p></div><span class="badge">今天</span></div>`).join("")}</div>`, `<button class="pill-button" onclick="start()">进入训练</button>`)}
+              ${panel("能力进度", `<div class="list">${abilities.slice(0, 3).map((a) => `<div><div class="row"><strong>${a.name}</strong><span class="badge">${a.progress}%</span></div><div class="progress"><div style="width:${a.progress}%"></div></div></div>`).join("")}</div>`, `<button class="pill-button" onclick="go('map')">看全部</button>`)}
             </div>
-            <Panel title="今日应用" action={done.includes(todayIndex) ? "已完成" : "标记完成"} onAction={() => setDone(done.includes(todayIndex) ? done.filter((id) => id !== todayIndex) : [...done, todayIndex])}>
-              <div className="rounded-3xl bg-gradient-to-br from-blue-50 to-white p-5">
-                <p className="text-xl font-semibold">{today[0]}</p>
-                <p className="mt-2 text-sm text-slate-500">{today[1]}</p>
-              </div>
-            </Panel>
+            ${panel("今日应用", `<div class="row"><div><h3>${today.title}</h3><p class="muted">${today.scene}</p></div><span class="badge">已完成 ${tasks.filter((task) => task.done).length}/${tasks.length}</span></div>`, `<button class="pill-button" onclick="toggleTask(${todayIndex})">${today.done ? "已完成" : "标记完成"}</button>`)}
           </div>
-        );
+        `;
       }
 
-      function MapView({ ability, abilityId, setAbilityId }) {
-        return (
-          <div className="space-y-6">
-            <Title eyebrow="能力地图" title="你正在形成的，不是笔记，是能力。" desc="书和知识点被系统收进后台，前台只保留能力、训练和下一步。" />
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {abilities.map((item) => (
-                <button key={item.id} onClick={() => setAbilityId(item.id)} className={`rounded-[1.5rem] p-5 text-left shadow-sm transition ${abilityId === item.id ? "bg-blue-600 text-white shadow-blue-200" : "bg-white shadow-slate-200/90"}`}>
-                  <div className="mb-8 flex justify-between"><span className="rounded-2xl bg-white/15 px-3 py-2">能力</span><span>{item.progress}%</span></div>
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p className={`mt-2 text-sm leading-6 ${abilityId === item.id ? "text-blue-50" : "text-slate-500"}`}>{item.problem}</p>
-                </button>
-              ))}
-            </div>
-            <section className="rounded-[2rem] bg-white p-6 shadow-sm shadow-slate-200/90">
-              <p className="text-sm font-medium text-blue-600">主题岛屿</p>
-              <h2 className="mt-2 text-3xl font-semibold">{ability.name}</h2>
-              <p className="mt-3 text-sm text-slate-500">来源：{ability.books.join("、")}</p>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {ability.islands.map(([name, pointCount, bookCount]) => (
-                  <article key={name} className="rounded-3xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-5">
-                    <h3 className="text-lg font-semibold">{name}</h3>
-                    <p className="mt-2 text-sm text-slate-500">{pointCount} 个知识点 · {bookCount} 本书</p>
-                  </article>
-                ))}
-              </div>
-            </section>
+      function mapView() {
+        const active = abilities.find((item) => item.id === state.ability) || abilities[0];
+        return `
+          <div class="stack">
+            ${title("能力地图", "你正在形成的，不是笔记，是能力。", "书和知识点被系统收进后台，前台只保留能力、训练和下一步。")}
+            <div class="grid-4">${abilities.map((a) => `<button class="ability ${state.ability === a.id ? "active" : ""}" onclick="state.ability='${a.id}';render()"><span class="badge">${a.progress}%</span><h3 style="margin-top:28px">${a.name}</h3><p class="muted">${a.problem}</p></button>`).join("")}</div>
+            ${panel("主题岛屿 · " + active.name, `<p class="muted">来源：${active.books.join("、")}</p><div class="grid-3" style="margin-top:20px">${active.islands.map((island) => `<article class="island"><h3>${island[0]}</h3><p class="muted">${island[1]} 个知识点 · ${island[2]} 本书</p></article>`).join("")}</div>`)}
           </div>
-        );
+        `;
       }
 
-      function Library({ start }) {
-        return (
-          <div className="space-y-6">
-            <Title eyebrow="书库" title="书不在前台堆积，它们在后台贡献能力。" desc="这里不追踪页数。每本书都被转化为能力模块、复习任务和应用场景。" />
-            <div className="grid gap-5 md:grid-cols-2">
-              {books.map((book) => (
-                <article key={book.title} className="flex flex-col gap-5 rounded-[2rem] bg-white p-5 shadow-sm shadow-slate-200/90 sm:flex-row">
-                  <div className={`h-40 rounded-3xl bg-gradient-to-br ${book.color} p-5 sm:w-36`}><p className="mt-20 text-lg font-semibold">{book.title}</p></div>
-                  <div>
-                    <p className="text-sm text-slate-500">{book.author}</p>
-                    <h2 className="mt-1 text-xl font-semibold">{book.title}</h2>
-                    <p className="mt-3 text-sm leading-6 text-slate-500">贡献：{book.contributes.join("、")}</p>
-                    <button onClick={() => start(book)} className="mt-6 rounded-full bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200">从这本书训练</button>
-                  </div>
-                </article>
-              ))}
-            </div>
+      function library() {
+        return `
+          <div class="stack">
+            ${title("书库", "书不在前台堆积，它们在后台贡献能力。", "这里不追踪页数。每本书都被转化为能力模块、复习任务和应用场景。")}
+            <div class="grid-2">${books.map((book, index) => `<article class="book"><div class="cover">${book.title}</div><div><p class="muted">${book.author}</p><h3>${book.title}</h3><p class="muted" style="margin-top:12px">贡献：${book.contributes.join("、")}</p><div class="chips">${book.contributes.map((item) => `<span class="chip">${item}</span>`).join("")}</div><button class="primary" style="margin-top:22px" onclick="start(${index})">从这本书训练</button></div></article>`).join("")}</div>
           </div>
-        );
+        `;
       }
 
-      function Field({ done, setDone }) {
-        return (
-          <div className="space-y-6">
-            <Title eyebrow="应用场" title="知识只有被用过，才开始变成能力。" desc="每个任务都很小，但必须进入真实场景。" />
-            <div className="grid gap-4">
-              {initialTasks.map((task, index) => (
-                <article key={task[0]} className="flex flex-col justify-between gap-5 rounded-[2rem] bg-white p-5 shadow-sm shadow-slate-200/90 sm:flex-row sm:items-center">
-                  <div>
-                    <h2 className="text-lg font-semibold">{task[0]}</h2>
-                    <p className="mt-2 text-sm text-slate-500">{task[1]}</p>
-                    <div className="mt-3 flex gap-2">{task[2].map((point) => <span key={point} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">{point}</span>)}</div>
-                  </div>
-                  <button onClick={() => setDone(done.includes(index) ? done.filter((id) => id !== index) : [...done, index])} className={`rounded-full px-5 py-3 text-sm font-semibold ${done.includes(index) ? "bg-slate-100 text-slate-500" : "bg-blue-600 text-white shadow-lg shadow-blue-200"}`}>
-                    {done.includes(index) ? "撤销完成" : "完成"}
-                  </button>
-                </article>
-              ))}
-            </div>
+      function field() {
+        return `
+          <div class="stack">
+            ${title("应用场", "知识只有被用过，才开始变成能力。", "每个任务都很小，但必须进入真实场景。")}
+            <div class="list">${tasks.map((task, index) => `<article class="task"><div><h3>${task.title}</h3><p class="muted">${task.scene}</p><div class="chips">${task.points.map((item) => `<span class="chip">${item}</span>`).join("")}</div></div><button class="${task.done ? "secondary" : "primary"}" onclick="toggleTask(${index})">${task.done ? "撤销完成" : "完成"}</button></article>`).join("")}</div>
           </div>
-        );
+        `;
       }
 
-      function Session({ book, step, setStep, recall, setRecall, setView }) {
-        const active = steps.findIndex(([id]) => id === step);
-        return (
-          <div className="space-y-6">
-            <Title eyebrow="学习流程" title={`${book.title}：读一点，然后合上书。`} desc="这个流程演示核心闭环：阅读、白纸回忆、反馈、复习、应用。" />
-            <section className="rounded-[2rem] bg-white p-5 shadow-sm shadow-slate-200/90">
-              <div className="grid gap-3 md:grid-cols-5">
-                {steps.map(([id, label], index) => (
-                  <button key={id} onClick={() => setStep(id)} className={`rounded-2xl px-3 py-3 text-sm font-semibold ${id === step ? "bg-blue-600 text-white" : index < active ? "bg-blue-50 text-blue-600" : "bg-slate-50 text-slate-400"}`}>{label}</button>
-                ))}
-              </div>
-            </section>
-            <section className="rounded-[2rem] bg-white p-6 shadow-sm shadow-slate-200/90">
-              {step === "read" && <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]"><div className={`rounded-3xl bg-gradient-to-br ${book.color} p-6`}><div className="flex min-h-72 flex-col justify-between"><p className="text-sm text-slate-600">{book.author}</p><h2 className="text-3xl font-semibold">{book.title}</h2></div></div><div><p className="mb-4 inline-block rounded-full bg-blue-50 px-4 py-2 text-sm text-blue-600">阅读 03:00</p><p className="text-2xl font-semibold leading-10">{book.excerpt}</p><button onClick={() => setStep("recall")} className="mt-8 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white">合上书，开始回忆</button></div></div>}
-              {step === "recall" && <div><p className="text-sm font-medium text-blue-600">白纸回忆</p><h2 className="mt-2 text-3xl font-semibold">不看原文，写下你记住的。</h2><textarea value={recall} onChange={(event) => setRecall(event.target.value)} className="mt-6 min-h-72 w-full resize-none rounded-3xl border border-slate-200 bg-slate-50 p-5 outline-none focus:ring-4 focus:ring-blue-100" placeholder="用自己的话写出理解..." /><button onClick={() => setStep("feedback")} className="mt-5 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white">提交给 AI 反馈</button></div>}
-              {step === "feedback" && <StepCard title="你记住了主干，还差两个钩子。" button="安排复习" onClick={() => setStep("schedule")} items={["记住了：主动回忆强于重复阅读", "漏掉了：测验本身也是学习", "误解了：不是越痛苦越好，而是难度要可承受"]} />}
-              {step === "schedule" && <StepCard title="这个知识点会在遗忘前回来。" button="生成应用任务" onClick={() => setStep("apply")} items={["明天：白纸回忆", "3 天后：低风险测验", "1 周后：应用输出"]} />}
-              {step === "apply" && <StepCard title="用 100 字向朋友解释主动回忆。" button="进入应用场" onClick={() => setView("field")} items={["场景：发给一个正在准备考试的朋友", "目标：帮他把看懂了变成能想起来"]} />}
-            </section>
-          </div>
-        );
+      function session() {
+        const index = stepNames.findIndex(([id]) => id === state.step);
+        const stepper = `<section class="stepper">${stepNames.map(([id, label], i) => `<button class="step ${state.step === id ? "active" : ""}" onclick="setStep('${id}')">${label}</button>`).join("")}</section>`;
+        let body = "";
+        if (state.step === "read") {
+          body = `<div class="session-read"><div class="cover">${state.book.title}</div><div><span class="badge">阅读 03:00</span><p class="large-copy" style="margin-top:18px">${state.book.excerpt}</p><button class="primary" style="margin-top:28px" onclick="setStep('recall')">合上书，开始回忆</button></div></div>`;
+        } else if (state.step === "recall") {
+          body = `<p class="eyebrow">白纸回忆</p><h2>不看原文，写下你记住的。</h2><textarea oninput="state.recall=this.value" placeholder="用自己的话写出理解...">${state.recall}</textarea><button class="primary" style="margin-top:18px" onclick="setStep('feedback')">提交给 AI 反馈</button>`;
+        } else if (state.step === "feedback") {
+          body = stepBody("你记住了主干，还差两个钩子。", ["记住了：主动回忆强于重复阅读", "漏掉了：测验本身也是学习", "误解了：不是越痛苦越好，而是难度要可承受"], "安排复习", "schedule");
+        } else if (state.step === "schedule") {
+          body = stepBody("这个知识点会在遗忘前回来。", ["明天：白纸回忆", "3 天后：低风险测验", "1 周后：应用输出"], "生成应用任务", "apply");
+        } else {
+          body = stepBody("用 100 字向朋友解释主动回忆。", ["场景：发给一个正在准备考试的朋友", "目标：帮他把看懂了变成能想起来"], "进入应用场", "field");
+        }
+        return `<div class="stack">${title("学习流程", `${state.book.title}：读一点，然后合上书。`, "这个流程演示核心闭环：阅读、白纸回忆、反馈、复习、应用。")}${stepper}<section class="session-card">${body}</section></div>`;
       }
 
-      function StepCard({ title, items, button, onClick }) {
-        return <div><h2 className="text-3xl font-semibold">{title}</h2><div className="mt-6 grid gap-4 md:grid-cols-3">{items.map((item) => <div key={item} className="rounded-3xl bg-slate-50 p-5 text-sm leading-6 text-slate-600">{item}</div>)}</div><button onClick={onClick} className="mt-6 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white">{button}</button></div>;
+      function stepBody(heading, items, button, next) {
+        const click = next === "field" ? "go('field')" : `setStep('${next}')`;
+        return `<h2>${heading}</h2><div class="grid-3" style="margin-top:22px">${items.map((item) => `<div class="island">${item}</div>`).join("")}</div><button class="primary" style="margin-top:24px" onclick="${click}">${button}</button>`;
       }
 
-      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+      function toggleTask(index) {
+        tasks[index].done = !tasks[index].done;
+        render();
+      }
+
+      function render() {
+        const views = { home, map: mapView, library, field, session };
+        document.getElementById("app").innerHTML = renderShell(views[state.view]());
+      }
+
+      render();
     </script>
   </body>
 </html>
